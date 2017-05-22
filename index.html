@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<label>返回图片的类型:<select id="type">
+    <option>png</option>
+    <option>jpeg</option>
+</select></label>
+<input id="file" type="file"><button id="transform">转换</button>
+<script>
+    document.querySelector("#transform").addEventListener("click",function(){
+        var type=document.querySelector("#type").value,
+        img = document.createElement("img"),
+        c=document.createElement("canvas"),
+        cxt=c.getContext("2d"),
+        oFReader = new FileReader(),
+        file=document.querySelector("#file").files[0];
+        oFReader.addEventListener("load",function (oFREvent) {
+            var image=new Image();
+            image.src=oFREvent.target.result;
+            image.addEventListener("load",function(){
+                c.height=image.height;
+                c.width=image.width;
+                cxt.drawImage(image,0,0);
+                if(type=="jpeg"){
+                    img.src=c.toDataURL("image/jpeg",1);
+                }else {
+                    img.src=c.toDataURL();
+                }
+                if(document.querySelector("img")){
+                    document.body.removeChild(document.querySelector("img"));
+                }
+                document.body.appendChild(img);
+            });
+        });
+        oFReader.readAsDataURL(file);
+    })
+</script>
+</body>
+</html>
